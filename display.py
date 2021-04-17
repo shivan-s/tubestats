@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-# aliabdaalanalysis.py - main programme for showing information using streamlit
-# For Shivan - up to part with time difference
+# display.py - main programme for showing information using streamlit
 
 
 import streamlit as st
@@ -8,17 +7,15 @@ from PIL import Image
 
 from functions import YT_functions
 
-ali = YT_functions()
+youtuber = YT_functions()
 ali.load_data()
-df = ali.transformed_data()
+df = youtuber.transformed_data()
 
 
-st.title('Ali Abdaal Youtube Analysis')
-ali_imag = Image.open('aliphoto.jpeg')
-st.image(ali_imag, caption='Ali Abdaal, YouTuber and Doctor')
+st.title('Youtube Analysis')
 """
 ## Introduction
-This is a short analysis of [Ali Abdaal's Youtube Channel](https://www.youtube.com/channel/UCoOae5nYA7VqaXzerajD0lg). The inspiration for this came from the fact that [Ali's preches about consistency](https://aliabdaal.com/consistency-is-king/). In this analysis we are doing to determine how consistent he is in posting YouTube videos along with any interesting statistics.
+
 """
 
 st.write('Total Number of Videos: ', str(ali.total_videos()))
