@@ -2,21 +2,21 @@
 # functions.py - contains all the functions and calculations for analysing Ali Abdaal's youtube channel
 # For Shivan: Up tp part where time difference display
 
+import math
+from datetime import date, time, datetime, timedelta
+
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import altair as alt
-import math
 import isodate
-
-from datetime import date, time, datetime, timedelta
 
 def load_YT_data():
     filepath = 'video_data.csv'
     return pd.read_csv(filepath)
 
-class YT_functions:
+class DataGraphFunctions:
     '''
     contains all methods needed to create output
     '''
@@ -24,7 +24,7 @@ class YT_functions:
     def __init__(self, filepath='video_data.csv'):
         self.filepath = filepath
 
-    def load_data(self):
+    def load_transform_data(self):
         self.df = pd.read_csv(self.filepath)
 
     def transformed_data(self):
@@ -174,4 +174,5 @@ class YT_functions:
         c = c1
         return c
 
-
+if __name__ == '__main__':
+    pass
