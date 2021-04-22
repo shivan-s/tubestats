@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# display.py - main script for showing information using streamlit
+# main.py - main script for showing information using streamlit
 
 from datetime import datetime, timedelta
 
@@ -27,11 +27,12 @@ def main():
     if not channel_id:
         st.warning('Please input a Youtube channel ID (e.g. %s)' % ALI_ABDAAL_CHANNEL_ID)
         st.stop()
-    youtuber_data = fetch_data(channel_id)
+    youtuber_data = fetch_data(channel_id) 
+    df = youtuber_data.dataframe()
 
     st.header(youtuber_data.channel_name())
     st.image(youtuber_data.thumbnail_url(), width=400)
-    st.write(youtuber_data.channel_description())
+    #st.write(youtuber_data.channel_description())
 
     st.header('Quick Statistics')
     st.markdown('Total Number of Videos: `' + '{:,}'.format(int(youtuber_data.video_count())) + '`')
@@ -44,7 +45,6 @@ def main():
     """
     List of videos and all relevant features.
     """
-    df = youtuber_data.dataframe()
     st.write(df)
     """
     Below is a graph plotting the views of each video over time. The colour represents the like and dislike, the size represents the number of views.
@@ -71,28 +71,30 @@ def main():
         c = youtuber_data.scatter_all_videos(transformed_df)
         st.altair_chart(c, use_container_width=True)
     
-    #TODO: display links to most popular video
-    #TODO: display links to least popular video (1st video is video link)
-    def display_vid_links(data, num):
+    def display_vid_links(most_viewed_info):
             st.write('Here are links to the videos:')
-            for i in range(num):
-                title, link = data(i)
-                st.markdown(str(i+1) +'. ' + '[' + title +']' + '(' + link + ')')
-    
-    """
-    Again my opinion, views are a good example of well performing videos. The content is engaging enough and liked to be recommended and viewed more often.
-    """
-    st.subheader('Most Popular Videos')
-    #st.write(most_viewed)
-    #display_vid_links(youtuber_data.most_viewed_video, 5)
-    
-    #test link for video
-    ALI_VID_TEST = 'https://www.youtube.com/watch?v=1ArVtCQqQRE'
-    st.video(data=ALI_VID_TEST)
-    
+            titles = most_viewed_info['title']
+            links = most_viewed_info['link']
+            for i in range(len(titles)):
+                title = str(titles[i])
+                link = 'https://www.youtube.com/watch?v=' + str(links[i])
+                if i == 0:
+                    st.write(str(i+1) + '. ' + title)
+                    st.video(data=link)
+                else:
+                    st.markdown(str(i+1) + '. ' + '[' + title +']' + '(' + link + ')')
 
- 
-    dislike_num = st.slider('Number of videos', 5, 20, key=0)
+    most_viewed_info = youtuber_data.most_viewed_videos(df=transformed_df)
+
+    st.subheader('Most Popular Videos')
+    """
+    Hypothesis: view count indicates well performing videos. The content is engaging enough and liked to be recommended and viewed more often to other viewers.
+    """
+    st.write(most_viewed_info['preserved_df'])
+    display_vid_links(most_viewed_info)
+
+    #TODO: display links to least popular video (1st video is video link)
+    #dislike_num = st.slider('Number of videos', 5, 20, key=0)
     disliked = youtuber.disliked_videos(dislike_num)
     st.write(disliked)
     display_vid_links(youtuber.most_disliked_video, dislike_num)

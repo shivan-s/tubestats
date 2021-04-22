@@ -237,36 +237,47 @@ class DataFunctions:
                 size=alt.Size('statistics\.viewCount:Q', legend=None)
         )
         return c
+
 #TODO reswrite functions to display the best and worst videos
-    def viewed_videos(self, num=5):
-#        """
-#        num: (int) e.g. 5
-#        """
-#         self.df.sort_values(by='statistics.viewCount', ascending=False)[['snippet.title',
-#                                                            'statistics.viewCount',
-#                                                            'statistics.like-dislike-ratio']].head(int(num))
-#
-#    def most_viewed_video(self, num):
-#        most_viewed_id = self.df.sort_values(by='statistics.viewCount', ascending=False)[['snippet.title', 'id']]
-#        title = str(most_viewed_id['snippet.title'].values[num])
-#        link = 'https://www.youtube.com/watch?v=' + str(most_viewed_id['id'].values[num])
-#        return title, link
-#
-#    def disliked_videos(self, num=5):
-#        """
-#        num: (int) e.g. 5
-#        """
-#        return self.df.sort_values(by='statistics.like-dislike-ratio')[['snippet.title', 
-#                                                    'statistics.like-dislike-ratio',
-#                                                    'statistics.viewCount', 
-#                                                    'statistics.sum-like-dislike']].head(int(num))
-#
-#    def most_disliked_video(self, num):
-#        most_disliked_id = self.df.sort_values(by='statistics.like-dislike-ratio')[['snippet.title', 'id']]
-#        title = str(most_disliked_id['snippet.title'].values[num])
-#        link = 'https://www.youtube.com/watch?v=' + str(most_disliked_id['id'].values[num])
-#        return title, link
-#
+
+    def most_viewed_videos(self, df, num=5):
+        """
+        Returns dataframe, title of video, and video link in tuple
+        df: (dataframe)
+        num: (int) e.g. 5
+        """
+        # sort df and then keep relevant tags
+        sorted_df = df.sort_values(by='statistics.viewCount', ascending=False)
+        title = list(sorted_df['snippet.title'].values[0:num])
+        link = list(sorted_df['id'].values[0:num])
+        preserved_df = sorted_df[[
+             'snippet.title',
+             'statistics.viewCount',
+             'statistics.like-dislike-ratio',
+             ]][0:num]
+        most_viewed_info = dict(
+                preserved_df=preserved_df,
+                title=title,
+                link=link,
+                )
+        return most_viewed_info
+
+    def disliked_videos(self, num=5):
+        """
+        num: (int) e.g. 5
+        """
+        return self.df.sort_values(by='statistics.like-dislike-ratio')[[
+            'snippet.title', 
+            'statistics.like-dislike-ratio',
+            'statistics.viewCount', 
+            'statistics.sum-like-dislike']].head(int(num))
+
+    def most_disliked_video(self, num):
+        most_disliked_id = self.df.sort_values(by='statistics.like-dislike-ratio')[['snippet.title', 'id']]
+        title = str(most_disliked_id['snippet.title'].values[num])
+        link = 'https://www.youtube.com/watch?v=' + str(most_disliked_id['id'].values[num])
+        return title, link
+
 
 #    def time_difference_calculate(self):
 #
