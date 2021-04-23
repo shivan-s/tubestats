@@ -11,6 +11,13 @@ from tubestats.helpers import create_api, VideoData, DataFunctions
 def test_create_api():
     youtube = create_api()
 
+def load_video_data(self):
+        """
+        Load data instead of calling API
+        """
+        # df = pd.read_hdf(self.BASE_DIR / 'data' / 'store_tube.h5', key=self.channel_ID)
+        return # df
+
 @pytest.fixture() 
 def videodata():
     ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
@@ -22,7 +29,6 @@ def test_constructor(videodata):
 
 def test_get_channel_data(videodata):
     channel_data = videodata.get_channel_data()
-    assert type(channel_data) == dict
     assert channel_data['channel_name'] == 'Ali Abdaal'
 
 def test_get_video_data(videodata):
@@ -84,5 +90,7 @@ def test_(datafunctions):
     pass
 
 def test_most_viewed_videos(datafunctions):
-    preserved_df, title, link = datafunctions.most_viewed_videos()
+    most_viewed_info = datafunctions.most_viewed_videos()
 
+def test_most_disliked_videos(datafunctions):
+    most_disliked_info =

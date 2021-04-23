@@ -23,6 +23,8 @@ import altair as alt
 import googleapiclient.discovery
 import googleapiclient.errors
 
+#TODO: time difference graph
+#TODO: fix axis for the videos x log of view count graph
 
 def create_api():
     """
@@ -238,13 +240,11 @@ class DataFunctions:
         )
         return c
 
-#TODO reswrite functions to display the best and worst videos
-
-    def most_viewed_videos(self, df, num=5):
+    def most_viewed_videos(self, df, num: int = 10):
         """
         Returns dataframe, title of video, and video link in tuple
         df: (dataframe)
-        num: (int) e.g. 5
+        num: (int) e.g. 10
         """
         # sort df and then keep relevant tags
         sorted_df = df.sort_values(by='statistics.viewCount', ascending=False)
@@ -254,7 +254,7 @@ class DataFunctions:
              'snippet.title',
              'statistics.viewCount',
              'statistics.like-dislike-ratio',
-             ]][0:num]
+             ]].head(int(num))
         most_viewed_info = dict(
                 preserved_df=preserved_df,
                 title=title,
@@ -262,70 +262,84 @@ class DataFunctions:
                 )
         return most_viewed_info
 
-    def disliked_videos(self, num=5):
+    def most_disliked_videos(self, df, num=5):
         """
+        Disliked - Returns dataframe, title of video, and video link in tuple
+        df: (dataframe)
         num: (int) e.g. 5
         """
-        return self.df.sort_values(by='statistics.like-dislike-ratio')[[
+        # sort df and then keep relevant tags
+        sorted_df = df.sort_values(by='statistics.like-dislike-ratio', ascending=True)
+        title = list(sorted_df['snippet.title'].values[0:num])
+        link = list(sorted_df['id'].values[0:num])
+        preserved_df = sorted_df[[
             'snippet.title', 
             'statistics.like-dislike-ratio',
             'statistics.viewCount', 
             'statistics.sum-like-dislike']].head(int(num))
 
-    def most_disliked_video(self, num):
-        most_disliked_id = self.df.sort_values(by='statistics.like-dislike-ratio')[['snippet.title', 'id']]
-        title = str(most_disliked_id['snippet.title'].values[num])
-        link = 'https://www.youtube.com/watch?v=' + str(most_disliked_id['id'].values[num])
-        return title, link
+        most_disliked_info = dict(
+                preserved_df=preserved_df,
+                title=title,
+                link=link,
+                )
+        return most_disliked_info
 
+#TODO: plot time difference data
 
-#    def time_difference_calculate(self):
-#
-#        video_dates = dict(zip(self.df.index, self.df['snippet.publishedAt_REFORMATED']))
-#        video_diff = video_dates.copy() # duplicating dict .copy() so memory isn't referenced
-#
-#        for i in video_dates.keys():
-#            if i == max(list(video_dates.keys())):
-#                td = video_dates[i]- video_dates[i]
-#            else:
-#                td = video_dates[i] - video_dates[i+1]
-#
-#            video_diff[i] = td.days + ( td.seconds / 60 / 60 / 24 )
-#
-#        td_df = pd.DataFrame(data=video_diff.values(), index=video_diff.keys(), columns=['snippet.time_diff'])
-#        self.df = pd.concat([self.df, td_df], axis=1)
-#        return self.df
-#    
-#    def list_time_difference_ranked(self, num=10):
-#        return self.df.sort_values(by='snippet.time_diff', ascending=False)[['snippet.time_diff', 
-#            'snippet.publishedAt_REFORMATED', 'snippet.title']].head(int(num))
-#        
-#    def jitter_plot(self):
-#        c1 = alt.Chart(self.df, title='Time Difference',).mark_circle().encode(
-#            y=alt.Y(
-#                'jitter:Q',
-#                title=None,
-#                axis=alt.Axis(values=[0], ticks=True, grid=False, labels=False),
-#                scale=alt.Scale(),
-#                ),
-#            x=alt.X('snippet\.time_diff:Q', title='Day from previous video'),
-#            color=alt.Color('statistics\.viewCount:Q', legend=None),
-#            tooltip=['snippet\.title:N', 'statistics\.viewCount:Q'],
-#            ).transform_calculate(
-#                jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
-#            )#.configure_facet(
-#             #   spacing=0
-#            #).configure_view(
-#            #    stroke=None
-#            #)
-#        c2 = alt.Chart(self.df).mark_bar().encode(
-#                x=alt.X('snippet\.time_diff:Q', title='Day from previous video', bin=alt.Bin(maxbins=22)),
-#                y='count()',
-#                tooltip='count()'
-#                )
-#        c = c1
-#        return c
-#
+    def time_difference_calculate(self, df):
+        """
+        Works out time difference between videos
+        """
+        video_dates = dict(zip(df.index, df['snippet.publishedAt_REFORMATED']))
+        video_diff = video_dates.copy() # duplicating dict .copy() so memory isn't referenced
+
+        for i in video_dates.keys():
+            if i == max(list(video_dates.keys())):
+                td = video_dates[i]- video_dates[i]
+            else:
+                td = video_dates[i] - video_dates[i+1]
+
+            video_diff[i] = td.days + ( td.seconds / 60 / 60 / 24 )
+
+        td_df = pd.DataFrame(data=video_diff.values(), index=video_diff.keys(), columns=['snippet.time_diff'])
+        new_df = pd.concat([df, td_df], axis=1)
+        return new_df
+    
+    def list_time_difference_ranked(self, df, num=10):
+        time_differences = df.sort_values(by='snippet.time_diff', ascending=False)[[
+            'snippet.time_diff',
+            'snippet.publishedAt_REFORMATED',
+            'snippet.title'
+            ]].head(int(num))
+        return time_differences
+        
+    def get_time_difference_plot(self, df):
+        c1 = alt.Chart(df, title='Time Difference',).mark_circle().encode(
+            y=alt.Y(
+                'jitter:Q',
+                title=None,
+                axis=alt.Axis(values=[0], ticks=True, grid=False, labels=False),
+                scale=alt.Scale(),
+                ),
+            x=alt.X('snippet\.time_diff:Q', title='Day from previous video'),
+            color=alt.Color('statistics\.viewCount:Q', legend=None),
+            tooltip=['snippet\.title:N', 'statistics\.viewCount:Q'],
+            ).transform_calculate(
+                jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
+            ).configure_facet(
+                spacing=0
+            ).configure_view(
+                stroke=None
+            )
+        c2 = alt.Chart(df).mark_bar().encode(
+                x=alt.X('snippet\.time_diff:Q', title='Day from previous video', bin=alt.Bin(maxbins=22)),
+                y='count()',
+                tooltip='count()'
+                )
+        c = c1
+        return c
+
 
 def main():
     return

@@ -84,31 +84,30 @@ def main():
                 else:
                     st.markdown(str(i+1) + '. ' + '[' + title +']' + '(' + link + ')')
 
-    most_viewed_info = youtuber_data.most_viewed_videos(df=transformed_df)
-
     st.subheader('Most Popular Videos')
     """
     Hypothesis: view count indicates well performing videos. The content is engaging enough and liked to be recommended and viewed more often to other viewers.
     """
+    most_viewed_info = youtuber_data.most_viewed_videos(df=transformed_df)
     st.write(most_viewed_info['preserved_df'])
     display_vid_links(most_viewed_info)
 
-    #TODO: display links to least popular video (1st video is video link)
     #dislike_num = st.slider('Number of videos', 5, 20, key=0)
-    disliked = youtuber.disliked_videos(dislike_num)
-    st.write(disliked)
-    display_vid_links(youtuber.most_disliked_video, dislike_num)
     st.subheader('Most Unpopular Videos')
     """
     Remaining a hypothesis, people actively show their digust for a video by hitting dislike video. Hence, we are provided with a like-dislike ratio. We also have the sum to ensure we have enough likes/dislikes for fair comparison.
     """
+    most_disliked_info = youtuber_data.most_disliked_videos(df=transformed_df)
+    st.write(most_disliked_info['preserved_df'])
+    display_vid_links(most_disliked_info)        
 
-   
     st.subheader('Videos by time difference')
-    youtuber.time_difference_calculate()
-    timed_num = st.slider('Number of videos', 10, 30, key=2)
-    time_diff = youtuber.list_time_difference_ranked(timed_num)
+    time_df = youtuber_data.time_difference_calculate(df=transformed_df)
+    time_diff = youtuber_data.list_time_difference_ranked(df=time_df)
     st.write(time_diff)
+    st.write(youtuber_data.get_time_difference_plot(df=time_df), use_container_width=True)
+
+
     
 if __name__ == '__main__':
         main()
