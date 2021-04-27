@@ -83,7 +83,7 @@ class YouTubeAPI:
 
         :params:
             channel_data (Dict[str, str]): this is outputted from the function get_channel_data
-        :returns:
+        :return:
             df (pandas.core.frame.DataFrame): all videos in channel and data
         """
         channel_data = self.get_channel_data()

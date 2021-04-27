@@ -1,17 +1,18 @@
 # tubestats
 *by Shivan Sivakumaran*
 
-[Check is out](https://tubestats0.herokuapp.com) (link is slow)
+## Introduction
 
-Inspiration: I was inspired to make this to test how consistent Ali Abdaal was on posting YouTube videos.
+This is a simple dashboard app, which analyses a YouTube channel, providing interesting statistics.
 
-This is a simple dashboard that provides insights into a YouTube channel.
+The inspiration for this project came from Ali Abdaal. Ali Abdaal preaches about consistency. So, the question is how consistent is Ali Abdaal at posting YouTube video. Also, we will look at some other interesting channel statistics.
 
-Please contact me if you have any questions.
+[The app is live here](https://tubestats0.herokuapp.com) (link is slow)
 
 ## Includes
 - GoogleAPIClient (YouTube API)
 - Pandas
+- Altair
 - Streamlit
 - Heroku hosting
 
@@ -25,3 +26,6 @@ Please contact me if you have any questions.
 - [ ] Link to custom url: *https://tubestats.app*
 - [ ] Write a blog post about this topic
 
+## Feedback
+
+Please contact me if you have any questions.

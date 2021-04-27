@@ -6,6 +6,9 @@
 
 from tubestats.youtube_api import create_api, YouTubeAPI
 
+from pathlib import Path
+import pickle
+
 import pytest
 
 import googleapiclient
@@ -29,11 +32,15 @@ def test_get_channel_data(youtubeapi):
     channel_data = youtubeapi.get_channel_data()
     assert channel_data['channel_name'] == 'Ali Abdaal'
      
+    # saving channel data for API calls later on
+    BASE_DIR = Path(__file__).parent.parent
+    with open(BASE_DIR / 'data' / 'channel_data.pkl', 'wb') as p:
+        pickle.dump(channel_data, p)
+
 def test_get_video_data(youtubeapi):
     df = youtubeapi.get_video_data()
     assert isinstance(df, pandas.core.frame.DataFrame)
 
-# TODO: save the data to save API calls for testing
-# from pathlib import Path
-# df.to_hdf(self.BASE_DIR / 'data' / 'store_tube.h5', key=self.channel_ID)
-
+    # saving video data to save API calls for later testing
+    BASE_DIR = Path(__file__).parent.parent
+    df.to_pickle(BASE_DIR / 'data' / 'video_data.pkl')
