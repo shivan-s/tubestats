@@ -1,4 +1,4 @@
-#!usr/bin/env python
+#!usr/bin/env pythoR
 # tubestats/youtube_data.py - wrangles data acquired from tubestats/youtube_api.py
 #                           - produces channel and video statistics
 #                           - produces graphs based on channel and video channel_statistics
@@ -8,6 +8,7 @@ import math
 import logging
 import re
 from datetime import date, datetime, timedelta
+from typing import List 
 
 import isodate
 import pandas as pd
@@ -21,6 +22,7 @@ from tubestats.youtube_api import YouTubeAPI
 class YouTubeData:
     """
     Class containing methods to apply statistics to YouTube channel
+    
     :params:
         channel_ID (str): channel_ID
         channel_data (optional): used for testing
@@ -39,6 +41,7 @@ class YouTubeData:
     def channel_name(self) -> str:
         """
         Provides the channel name
+        
         :params: self
         :return: channel name
         :rtype: str
@@ -50,6 +53,7 @@ class YouTubeData:
     def video_count(self) -> int:
         """
         Provies total video count of the channel
+        
         :params: self
         :return: count
         :rtype: int
@@ -60,6 +64,7 @@ class YouTubeData:
     def start_date(self) -> str:
         """
         Provides a start date for the YouTube channel
+        
         :params: self
         :return: date channel started
         :rtype: str
@@ -75,6 +80,7 @@ class YouTubeData:
     def thumbnail_url(self) -> str:
         """
         Provides URL to high quality channel thumbnail
+        
         :params: self
         :return: url link
         :rtype: str
@@ -85,6 +91,7 @@ class YouTubeData:
     def channel_description(self) -> str:
         """
         Returns channel description
+        
         :params: self
         :return: channel description
         :rtype: str
@@ -92,9 +99,10 @@ class YouTubeData:
         description = self.channel_data['channel_description']
         return description
     
-    def raw_dataframe(self):
+    def raw_dataframe(self) -> pd.core.frame.DataFrame:
         """
         Return raw data frame of video data for channel
+        
         :params: self
         :return: raw_df 
         :rtype: pandas.core.frame.DataFrame
@@ -102,9 +110,10 @@ class YouTubeData:
         raw_df = self.df
         return raw_df
 
-    def dataframe(self):
+    def dataframe(self) -> pd.core.frame.DataFrame:
         """
         Returns dataframe with relevant columns and altering the datatypes
+        
         :params: self
         :return: df
         :rtype: pandas.core.frame.DataFrame
@@ -140,13 +149,13 @@ class YouTubeData:
         df['snippet.publishedAt_REFORMATED'] = df['snippet.publishedAt'].apply(lambda x : datetime.strptime(x, '%Y-%m-%dT%H:%M:%SZ'))
         df['contentDetails.duration_REFORMATED'] = df['contentDetails.duration'].apply(lambda x : isodate.parse_duration(x)) 
         # sorting data by time
-        df = df.sort_values(by='snippet.publishedAt_REFORMATED', ascending=True)
-        
+        df = df.sort_values(by='snippet.publishedAt_REFORMATED', ascending=True) 
         return df
 
     def total_channel_views(self) -> int:
         """
         Return the total channel views
+        
         :params: self
         :returns: total channel views
         :rtype: numpy.int64
@@ -158,6 +167,7 @@ class YouTubeData:
     def total_watchtime(self) -> timedelta:
         """
         Returns total view times for all videos of the channel
+        
         :params: self
         :returns: watchtime_total
         :rtype: timedelta
@@ -169,6 +179,7 @@ class YouTubeData:
     def total_comments(self) -> int:
         """
         Returns total comments throughout the whole channel
+        
         :params: self
         :returns: commments_total
         :rtype: numpy.int64
@@ -177,9 +188,10 @@ class YouTubeData:
         comments_total = df['statistics.commentCount'].sum()
         return comments_total
 
-    def transform_dataframe(self, date_start: datetime, date_end: datetime):
+    def transform_dataframe(self, date_start: datetime, date_end: datetime) -> pd.core.frame.DataFrame:
         """
         Constrains video between two dates
+        
         :params: self
             date_start: (datetime)
             date_end: (datetime)
@@ -190,12 +202,13 @@ class YouTubeData:
         df = df[(df['snippet.publishedAt_REFORMATED']>=date_start) & (df['snippet.publishedAt_REFORMATED']<date_end)]
         return df
 
-    def scatter_all_videos(self, df):
+    def scatter_all_videos(self, df: pd.core.frame.DataFrame) -> alt.vegalite.v4.Chart:
         """
         Produces graph plotting natural log of views over
+        
         :params: self
             df: (dataframe)
-        :return: c (
+        :return: c (altair.vegalite.v4.Chart)
         """
         df_views = df
         c = alt.Chart(df_views, title='Plot of videos over time').mark_point().encode(
@@ -207,11 +220,17 @@ class YouTubeData:
         )
         return c
 
-    def most_viewed_videos(self, df, num: int = 10):
+    def most_viewed_videos(self, df: pd.core.frame.DataFrame, num: int = 10) -> dict:
         """
-        Returns dataframe, title of video, and video link in tuple
-        df: (dataframe)
-        num: (int) e.g. 10
+        Returns dictionary for dataframe, title of video, and video link in a dictionary, ranking most viewed videos
+        
+        :params: self
+            df (dataframe)
+            num (int): default is 10
+        :return: key for dictionary:
+            'preserved_df' (dataframe)
+            'title' (str): video titles 
+            'link' (str): url links to video
         """
         # sort df and then keep relevant tags
         sorted_df = df.sort_values(by='statistics.viewCount', ascending=False)
@@ -229,11 +248,17 @@ class YouTubeData:
                 )
         return most_viewed_info
 
-    def most_disliked_videos(self, df, num=5):
+    def most_disliked_videos(self, df: pd.core.frame.DataFrame, num: int = 5) -> dict:
         """
-        Disliked - Returns dataframe, title of video, and video link in tuple
-        df: (dataframe)
-        num: (int) e.g. 5
+        Returns dictionary for dataframe, title of video, and video link in a dictionary ranking most disliked videos
+        
+        :params: self
+            df (dataframe)
+            num (int): default is 5
+        :return: key for dictionary:
+            'preserved_df' (dataframe)
+            'title' (str): video titles 
+            'link' (str): url links to video
         """
         # sort df and then keep relevant tags
         sorted_df = df.sort_values(by='statistics.like-dislike-ratio', ascending=True)
@@ -252,11 +277,14 @@ class YouTubeData:
                 )
         return most_disliked_info
 
-#TODO: plot time difference data
-
-    def time_difference_calculate(self, df):
+    def time_difference_calculate(self, df: pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
         """
         Works out time difference between videos
+
+        :params: self
+            df (pandas.core.frame.DataFrame): video information
+        :return: dataframe with time difference
+        :rtype: pandas.core.frame.DataFrame
         """
         video_dates = dict(zip(df.index, df['snippet.publishedAt_REFORMATED']))
         video_diff = video_dates.copy() # duplicating dict .copy() so memory isn't referenced
@@ -273,7 +301,14 @@ class YouTubeData:
         new_df = pd.concat([df, td_df], axis=1)
         return new_df
     
-    def list_time_difference_ranked(self, df, num=10):
+    def list_time_difference_ranked(self, df: pd.core.frame.DataFrame, num: int = 10) -> pd.core.frame.DataFrame:
+        """
+        Provides a list of videos ranked by time difference (day from previous video)
+        :params: self
+            df (pandas.core.frame.DataFrame)
+        :return: time_differences 
+        :rtype: pandas.core.frame.DataFrame
+        """
         time_differences = df.sort_values(by='snippet.time_diff', ascending=False)[[
             'snippet.time_diff',
             'snippet.publishedAt_REFORMATED',
@@ -281,8 +316,17 @@ class YouTubeData:
             ]].head(int(num))
         return time_differences
         
-    def get_time_difference_plot(self, df):
-        c1 = alt.Chart(df, title='Time Difference',).mark_circle().encode(
+    def time_difference_plot(self, df: pd.core.frame.DataFrame) -> alt.vegalite.v4.Chart:
+        """
+        Provides a 'dotplot' of videos based on length of time from previous video
+        
+        :params: self
+            df (pandas.core.frame.DataFrame)
+        :return:
+            c - graph
+        :rtype: altair.vegalite.v4.Chart
+        """
+        c = alt.Chart(df, title='Time Difference',).mark_circle().encode(
             y=alt.Y(
                 'jitter:Q',
                 title=None,
@@ -304,9 +348,7 @@ class YouTubeData:
                 y='count()',
                 tooltip='count()'
                 )
-        c = c1
         return c
-
 
 def main():
     return

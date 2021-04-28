@@ -8,6 +8,7 @@ from tubestats.youtube_data import YouTubeData
 import pickle
 from pathlib import Path
 from datetime import datetime, timedelta
+from typing import List
 
 import pytest
 import pandas
@@ -15,6 +16,10 @@ import numpy
 import altair
 
 # TODO: write tests
+# TODO: turn fixture from function into class
+
+ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
+BASE_DIR = Path(__file__).parent.parent
 
 @pytest.fixture()
 def youtubedata():
@@ -72,17 +77,49 @@ def test_total_comments(youtubedata):
     comments = youtubedata.total_comments()
     assert isinstance(comments, numpy.int64)
 
-def test_tranform_dataframe(youtubedata):
+@pytest.fixture()
+def with_dates(youtubedata):
     date_start = datetime(2017, 6, 30) 
     date_end = datetime(2017, 12, 30)
     df = youtubedata.transform_dataframe(date_start, date_end)
+    return df
+
+def test_tranform_dataframe(with_dates):
+    df = with_dates
     assert isinstance(df, pandas.core.frame.DataFrame)
     assert len(df) == 56
 
-def test_scatter_all_videos(youtubedata):
-    date_start = datetime(2017, 6, 30) 
-    date_end = datetime(2017, 12, 30)
-    df = youtubedata.transform_dataframe(date_start, date_end)
-    c = youtubedata.most_viewed_videos(df)
+def test_scatter_all_videos(with_dates, youtubedata):
+    df = with_dates
+    c = youtubedata.scatter_all_videos(df)
     assert isinstance(c, altair.vegalite.v4.api.Chart)
 
+def test_most_viewed_videos(with_dates, youtubedata):
+    df = with_dates
+    most_viewed = youtubedata.most_viewed_videos(df)
+    assert isinstance(most_viewed, dict)
+
+def test_most_disliked_videos(with_dates, youtubedata):
+    df = with_dates
+    most_disliked = youtubedata.most_disliked_videos(df)
+    assert isinstance(most_disliked, dict)
+
+@pytest.fixture()
+def time_difference(with_dates, youtubedata):
+    df = with_dates
+    df_with_td = youtubedata.time_difference_calculate(df)
+    return df_with_td
+
+def test_time_difference_calculate(time_difference):
+    df_with_td = time_difference
+    assert isinstance(df_with_td, pandas.core.frame.DataFrame)
+
+def test_list_time_difference_ranked(time_difference, youtubedata):
+    df = time_difference
+    time_diff = youtubedata.list_time_difference_ranked(df)
+    assert isinstance(time_diff, pandas.core.frame.DataFrame)
+
+def test_time_difference_plot(time_difference, youtubedata):
+    df = time_difference 
+    c = youtubedata.time_difference_plot(df)
+    assert isinstance(c, altair.vegalite.v4.api.Chart)

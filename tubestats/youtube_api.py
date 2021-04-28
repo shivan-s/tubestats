@@ -16,7 +16,7 @@ import pandas as pd
 import googleapiclient.discovery
 import googleapiclient.errors
 
-def create_api():
+def create_api() -> googleapiclient.discovery.Resource:
         """
         Creates an authenticated api client
         
@@ -77,7 +77,7 @@ class YouTubeAPI:
                     )
             return channel_data
 
-    def get_video_data(self):
+    def get_video_data(self) -> pd.core.frame.DataFrame:
         """
         Returns video information for a YouTube channel
 
