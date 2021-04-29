@@ -15,9 +15,6 @@ import pandas
 import numpy
 import altair
 
-# TODO: write tests
-# TODO: turn fixture from function into class
-
 ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
 BASE_DIR = Path(__file__).parent.parent
 
@@ -123,3 +120,9 @@ def test_time_difference_plot(time_difference, youtubedata):
     df = time_difference 
     c = youtubedata.time_difference_plot(df)
     assert isinstance(c, altair.vegalite.v4.api.Chart)
+
+def test_greatest_time_difference_video(time_difference, youtubedata):
+    df = time_difference
+    vid_list = youtubedata.greatest_time_difference_video(df) 
+
+    pass

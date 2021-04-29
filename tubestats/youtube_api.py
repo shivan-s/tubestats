@@ -1,8 +1,8 @@
 #!usr/bin/env python3
-# tubestats/youtube_api_connect.py  - connects to YouTube API
-#                                   - authenticates API_LIMIT
-#                                   - downloads data based on channel ID
-#                                   - returns pandas dataframe
+# tubestats/youtube_api - connects to YouTube API
+#                       - authenticates API_LIMIT
+#                       - downloads data based on channel ID
+#                       - returns pandas dataframe
 #
 # by Shivan Sivakumaran
 

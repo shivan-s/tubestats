@@ -1,4 +1,4 @@
-#!usr/bin/env pythoR
+#!usr/bin/env python3
 # tubestats/youtube_data.py - wrangles data acquired from tubestats/youtube_api.py
 #                           - produces channel and video statistics
 #                           - produces graphs based on channel and video channel_statistics
@@ -8,7 +8,7 @@ import math
 import logging
 import re
 from datetime import date, datetime, timedelta
-from typing import List 
+from typing import List, Dict
 
 import isodate
 import pandas as pd
@@ -16,8 +16,6 @@ import numpy as np
 import altair as alt
 
 from tubestats.youtube_api import YouTubeAPI
-
-# TODO: write docstrings and test
 
 class YouTubeData:
     """
@@ -312,7 +310,8 @@ class YouTubeData:
         time_differences = df.sort_values(by='snippet.time_diff', ascending=False)[[
             'snippet.time_diff',
             'snippet.publishedAt_REFORMATED',
-            'snippet.title'
+            'snippet.title',
+            'id',
             ]].head(int(num))
         return time_differences
         
@@ -343,12 +342,35 @@ class YouTubeData:
             ).configure_view(
                 stroke=None
             )
-        c2 = alt.Chart(df).mark_bar().encode(
-                x=alt.X('snippet\.time_diff:Q', title='Day from previous video', bin=alt.Bin(maxbins=22)),
-                y='count()',
-                tooltip='count()'
-                )
+            #        c2 = alt.Chart(df).mark_bar().encode(
+            #                x=alt.X('snippet\.time_diff:Q', title='Day from previous video', bin=alt.Bin(maxbins=22)),
+            #                y='count()',
+            #                tooltip='count()'
+            #                )
         return c
+    
+    def greatest_time_difference_video(self, df: pd.core.frame.DataFrame) -> Dict[str, str]:
+        # TODO: give prev video, greatest time difference video, next video
+        """
+        Provides the video id with the greatest time difference, the previous and the next video as a dict 
+
+        :params: self
+            df (pandas.core.frame.DataFrame) - df ordered by index and with dates slected
+            df_td (pandas.core.frame.DataFrame) - df with time differences
+        :return: vid_list with keys:
+            'greatest' - id with greatest time diff
+            'prev' - id previous
+            '_next' - id next
+        :rtype: Dict[str, str]
+        """
+        # video with greatest difference
+        # multply by -1 because dataframe is reversed
+        vid_list = dict( 
+                greatest=df.iloc[df['snippet.time_diff'].idxmax() * -1]['id'], 
+                prev=df.iloc[df['snippet.time_diff'].idxmax() * -1 + 1]['id'],
+                _next=df.iloc[df['snippet.time_diff'].idxmax() * -1 - 1]['id'],
+                )
+        return vid_list
 
 def main():
     return
