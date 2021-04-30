@@ -17,6 +17,7 @@ def fetch_data(channel_id):
 def main():
 
     ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
+    DEBUG = True
 
     st.title('TubeStats Analysis of a YouTube Channel')
     """
@@ -30,8 +31,12 @@ def main():
         st.warning('Please input a Youtube channel ID (e.g. %s)' % ALI_ABDAAL_CHANNEL_ID)
         st.stop()
     youtuber_data = fetch_data(channel_id) 
-    df = youtuber_data.dataframe()
+    if DEBUG == True:
+        raw_df = youtuber_data.raw_dataframe()
+        st.write(raw_df)
 
+    df = youtuber_data.dataframe()
+    
     st.header(youtuber_data.channel_name())
     st.image(youtuber_data.thumbnail_url(), width=400)
     st.write(youtuber_data.channel_description())
