@@ -342,21 +342,26 @@ class YouTubeData:
             ).configure_view(
                 stroke=None
             )
-            #        c2 = alt.Chart(df).mark_bar().encode(
-            #                x=alt.X('snippet\.time_diff:Q', title='Day from previous video', bin=alt.Bin(maxbins=22)),
-            #                y='count()',
-            #                tooltip='count()'
-            #                )
         return c
+
+    def time_difference_statistics(self, df: pd.core.frame.DataFrame) -> Dict[float, float]:
+        """
+        Gives quantiles for time differences
+
+        :params: self
+            df (pandas.core.frame.DataFrame)
+        :return: time_diff_quantiles
+        :rtype: dict
+        """
+        time_diff_quantiles = dict(df['snippet.time_diff'].quantile([0.25, 0.50, 0.75, 1.]))
+        return time_diff_quantiles
     
     def greatest_time_difference_video(self, df: pd.core.frame.DataFrame) -> Dict[str, str]:
-        # TODO: give prev video, greatest time difference video, next video
         """
         Provides the video id with the greatest time difference, the previous and the next video as a dict 
 
         :params: self
-            df (pandas.core.frame.DataFrame) - df ordered by index and with dates slected
-            df_td (pandas.core.frame.DataFrame) - df with time differences
+            df (pandas.core.frame.DataFrame) - df ordered by index, time differences and with dates slected
         :return: vid_list with keys:
             'greatest' - id with greatest time diff
             'prev' - id previous

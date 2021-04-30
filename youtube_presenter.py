@@ -13,9 +13,10 @@ from tubestats.youtube_data import YouTubeData
 def fetch_data(channel_id):
         youtuber_data = YouTubeData(channel_id)
         return youtuber_data
-    
+
 def main():
 
+    # Settings
     ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
     DEBUG = True
 
@@ -113,16 +114,20 @@ def main():
     st.write(time_diff)
     st.write(youtuber_data.time_difference_plot(df=time_df), use_container_width=True)
 
-    # TODO: provide statistics for time difference
-    # TODO: list previous and next video after video with greatest difference 
-    prev_col, great_col, next_col = st.beta_columns(3)
+    quantiles = youtuber_data.time_difference_statistics(df=time_df)
+    st.markdown('25th Percentile: `' + '{:0.1f}'.format(quantiles[0.25]) + '` days')
+    st.markdown('Median: `' + '{:0.1f}'.format(quantiles[0.50]) + '` days')
+    st.markdown('75th Percentile: `' + '{:0.1f}'.format(quantiles[0.75]) + '` days')
+    st.markdown('Greatest Hiatus: `' + '{:0.1f}'.format(quantiles[1.]) + '` days')
+ 
     vid_list = youtuber_data.greatest_time_difference_video(time_df)
+    st.subheader('Greatest:')
+    st.video('https://www.youtube.com/watch?v=' + str(vid_list['greatest']))
+
+    prev_col, next_col = st.beta_columns(2)
     with prev_col:
         st.subheader('Previous:')
         st.video('https://www.youtube.com/watch?v=' + str(vid_list['prev']))
-    with great_col:
-        st.subheader('Greatest:')
-        st.video('https://www.youtube.com/watch?v=' + str(vid_list['greatest']))
     with next_col:
         st.subheader('Next:')
         st.video('https://www.youtube.com/watch?v=' + str(vid_list['_next']))

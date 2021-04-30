@@ -121,8 +121,12 @@ def test_time_difference_plot(time_difference, youtubedata):
     c = youtubedata.time_difference_plot(df)
     assert isinstance(c, altair.vegalite.v4.api.Chart)
 
+def test_time_difference_statistics(time_difference, youtubedata):
+    df = time_difference
+    quan = youtubedata.time_difference_statistics(df)
+    assert isinstance(quan, dict)
+
 def test_greatest_time_difference_video(time_difference, youtubedata):
     df = time_difference
     vid_list = youtubedata.greatest_time_difference_video(df) 
-
-    pass
+    assert isinstance(vid_list, dict)
