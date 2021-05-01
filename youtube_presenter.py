@@ -9,24 +9,26 @@ import streamlit as st
 
 from tubestats.youtube_data import YouTubeData
 
-# @st.cache
+@st.cache
 def fetch_data(channel_id):
         youtuber_data = YouTubeData(channel_id)
         return youtuber_data
 
 def main():
 
+    # TODO: Reorganise Chan title/desc -> graphs and time diff -> worst and best videos
+    # TODO: parsing links
+
     # Settings
     ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
     DEBUG = True
 
-    st.title('TubeStats Analysis of a YouTube Channel')
+    # Presentation
     """
-    *by Shivan Sivakumaran 2021*
-    ## Introduction
-    This page provides a brief analysis of a YouTube Channel.
+    # TubeStats
+    *Analysing a YouTube Channel*
     """
-
+    # Channel ID input
     channel_id = st.text_input('Please enter Youtube channel ID:', ALI_ABDAAL_CHANNEL_ID)
     if not channel_id:
         st.warning('Please input a Youtube channel ID (e.g. %s)' % ALI_ABDAAL_CHANNEL_ID)

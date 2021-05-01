@@ -129,6 +129,9 @@ class YouTubeData:
             'statistics.favoriteCount',
             'statistics.commentCount']]
         
+        # turns nan into 0s
+        df = df.fillna(0)
+
         # changing dtypes
         df = df.astype({'statistics.viewCount': 'int',
             'statistics.likeCount': 'int',

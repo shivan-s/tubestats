@@ -4,6 +4,7 @@
 # by Shivan Sivakumaran
 
 from tubestats.youtube_data import YouTubeData
+from tests.test_settings import set_channel_ID_test_case
 
 import pickle
 from pathlib import Path
@@ -15,26 +16,25 @@ import pandas
 import numpy
 import altair
 
-ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
-BASE_DIR = Path(__file__).parent.parent
 
 @pytest.fixture()
 def youtubedata():
-    ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
     BASE_DIR = Path(__file__).parent.parent
-    
+    channel_ID = set_channel_ID_test_case() 
+
     # uses saved data instead of calling the API
     with open(BASE_DIR / 'data' / 'channel_data.pkl', 'rb') as p:
         channel_data = pickle.load(p)
     
     df = pandas.read_pickle(BASE_DIR / 'data' / 'video_data.pkl')
     
-    yd = YouTubeData(ALI_ABDAAL_CHANNEL_ID, channel_data=channel_data, df=df)
+    yd = YouTubeData(channel_ID=channel_ID, channel_data=channel_data, df=df)
     return yd
 
 def test_channel_name(youtubedata):
     name = youtubedata.channel_name()
-    assert name == 'Ali Abdaal'
+    assert isinstance(name, str)
+    # assert name == 'Ali Abdaal'
 
 def test_video_count(youtubedata):
     count = youtubedata.video_count()
@@ -47,12 +47,11 @@ def test_start_date(youtubedata):
 def test_thumbnail_url(youtubedata):
     thumb = youtubedata.thumbnail_url()
     assert isinstance(thumb, str)
-    assert thumb == 'https://yt3.ggpht.com/ytc/AAUvwnjTeFYoj5eDtxHLIiF36qp7yCZTp4q8mxIKLjWx=s800-c-k-c0x00ffffff-no-rj'
+    # assert thumb == 'https://yt3.ggpht.com/ytc/AAUvwnjTeFYoj5eDtxHLIiF36qp7yCZTp4q8mxIKLjWx=s800-c-k-c0x00ffffff-no-rj'
 
 def test_channel_description(youtubedata):
     desc = youtubedata.channel_description()
     assert isinstance(desc, str)
-    # TODO: better test case
 
 def test_raw_dataframe(youtubedata):
     raw_df = youtubedata.raw_dataframe()
@@ -84,7 +83,7 @@ def with_dates(youtubedata):
 def test_tranform_dataframe(with_dates):
     df = with_dates
     assert isinstance(df, pandas.core.frame.DataFrame)
-    assert len(df) == 56
+    # assert len(df) == 56
 
 def test_scatter_all_videos(with_dates, youtubedata):
     df = with_dates
