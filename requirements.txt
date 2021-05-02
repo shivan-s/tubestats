@@ -1,5 +1,4 @@
 altair==4.1.0
-altair-catplot==0.0.5
 apturl==0.5.2
 arandr==0.1.10
 argon2-cffi==20.1.0
@@ -171,7 +170,6 @@ toolz==0.11.1
 tornado==6.1
 tqdm==4.50.2
 traitlets==5.0.5
-typing-extensions==3.7.4.3
 tzlocal==2.1
 ubuntu-advantage-tools==20.3
 ubuntu-drivers-common==0.0.0
