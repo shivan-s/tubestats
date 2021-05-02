@@ -16,6 +16,8 @@ import pandas as pd
 import googleapiclient.discovery
 import googleapiclient.errors
 
+from tubestats.youtube_parser import channel_parser
+
 def create_api() -> googleapiclient.discovery.Resource:
         """
         Creates an authenticated api client
@@ -36,8 +38,9 @@ def create_api() -> googleapiclient.discovery.Resource:
         return youtube
 
 class YouTubeAPI:
-    def __init__(self, channel_ID: str):
-        self.channel_ID = channel_ID
+    def __init__(self, user_input: str):
+        self.user_input = user_input
+        self.channel_ID = '' 
         self.youtube = create_api()
 
     def get_channel_data(self) -> Dict[str, str]:
@@ -45,7 +48,7 @@ class YouTubeAPI:
             Requests channel metadata
             
             :params:
-                channel_ID (str): YouTube Channel ID
+                user_input (str): user inputted string
                 youtube (googlapiclient.discovery.Resource): authenticated api client
             :return: channel metadata as dict. Keys of dict:
                 upload_playlist_ID (str): ID of Entire playlist uploaded on channel
@@ -57,6 +60,7 @@ class YouTubeAPI:
                 channel_description (str): the description provided by the channel
             
             """
+            self.channel_ID = channel_parser(self.youtube, self.user_input)
             channel_request = self.youtube.channels().list(
                 part='snippet,contentDetails,statistics',
                 id=self.channel_ID

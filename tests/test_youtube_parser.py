@@ -22,12 +22,15 @@ def test_parser(youtubeapi):
     ALI_YT_LINK_long = 'https://www.youtube.com/watch?v=khQomXNzhkE'
     ALI_YT_LINK_partial = 'youtube.com/watch?v=khQomXNzhkE'
     ALI_YT_LINK_short = 'https://youtu.be/khQomXNzhkE'
-    
+    ALI_VIDEO_ID = 'khQomXNzhkE'
     assert channel_parser(youtube, ALI_YT_LINK_long) == ALI_CHAN_ID
     assert channel_parser(youtube, ALI_YT_LINK_partial) == ALI_CHAN_ID
     assert channel_parser(youtube, ALI_YT_LINK_short) == ALI_CHAN_ID
     assert channel_parser(youtube, ALI_CHAN_LEGACY_LINK) == ALI_CHAN_ID
     assert channel_parser(youtube, ALI_CHAN_LINK) == ALI_CHAN_ID
+    assert channel_parser(youtube, ALI_CHAN_ID) == ALI_CHAN_ID
+    # assert channel_parser(youtube, ALI_CHAN_LEGACY_NAME) == ALI_CHAN_ID
+    assert channel_parser(youtube, ALI_VIDEO_ID) == ALI_CHAN_ID
 
   
 
