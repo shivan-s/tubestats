@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run ./tubestats/main.py
+web: sh setup.sh && streamlit run ./youtube_presenter.py
