@@ -12,6 +12,14 @@ The inspiration for this project came from Ali Abdaal. Ali Abdaal preaches about
 
 [The app is live here](https://tubestats0.herokuapp.com) (link is slow)
 
+## How to use
+
+All you need to do is enter the YouTube channel ID:
+![](tubestats_general.gif)
+
+Alternatively, you can enter the YouTube video URL of the interested channel:
+![](tubestats_parsing.gif) 
+
 ## Technologies used
 - python 3.8
 - `googleapiclient` to access YouTube data
