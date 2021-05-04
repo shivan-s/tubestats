@@ -14,10 +14,7 @@ The inspiration for this project came from Ali Abdaal. Ali Abdaal preaches about
 
 ## How to use
 
-All you need to do is enter the YouTube channel ID:
-![](tubestats_general.gif)
-
-Alternatively, you can enter the YouTube video URL of the interested channel:
+All you need is the channel ID or you can enter the YouTube video URL of the interested channel:
 ![](tubestats_parsing.gif) 
 
 ## Technologies used
@@ -54,4 +51,4 @@ Alternatively, you can enter the YouTube video URL of the interested channel:
 
 ## Feedback
 
-Please [contact me](mailto:shivan@shivansivakumaran.com] if you have any questions.
+Please [contact me](mailto:shivan@shivansivakumaran.com) if you have any questions.
