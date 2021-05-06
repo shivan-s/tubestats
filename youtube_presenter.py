@@ -148,4 +148,8 @@ def main():
     [Please get in touch if you have any feedback](mailto:shivan@shivansivakumaran.com).
     """
 if __name__ == '__main__':
-    main()
+    st.set_page_config(page_title="TubeStats")
+    try:
+        main()
+    except Exception as e:
+        st.error('Error: {e}'.format(e=e))

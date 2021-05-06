@@ -9,6 +9,7 @@
 import os
 import math
 import logging
+import threading
 from typing import Dict
 
 from dotenv import load_dotenv
@@ -38,6 +39,15 @@ def create_api() -> googleapiclient.discovery.Resource:
         return youtube
 
 class YouTubeAPI:
+    """
+    This connects to the YouTube API, also includes methods to download video data
+
+    :params:
+        user_input (str)
+    :methods:
+        get_channel_data(): returns channel data
+        get_video_data(): gets videos data 
+    """
     def __init__(self, user_input: str):
         self.user_input = user_input
         self.channel_ID = '' 
