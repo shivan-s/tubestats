@@ -10,7 +10,7 @@ This is a simple dashboard app, which analyses how consistent a YouTube channel 
 
 The inspiration for this project came from Ali Abdaal. Ali Abdaal preaches about consistency. So, the question is how consistent is Ali Abdaal at posting YouTube video. Also, we will look at some other interesting channel statistics.
 
-[The app is live here](https://tubestats0.herokuapp.com) (link is slow)
+[The app is live here](https://www.tubestats.app)
 
 ## How to use
 
@@ -31,7 +31,8 @@ All you need is the channel ID or you can enter the YouTube video URL of the int
 	- [X] split python files up
 	- [X] type hinting
 	- [X] Create test cases
-- [ ] Link to custom url: *https://tubestats.app*
+- [X] Link to custom url: *https://www.tubestats.app*
+- [ ] async
 - [ ] Write a blog post about this topic
 
 ## Breaking down the script

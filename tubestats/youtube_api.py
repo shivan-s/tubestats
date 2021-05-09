@@ -9,6 +9,7 @@
 import os
 import math
 import logging
+import threading
 from typing import Dict
 
 from dotenv import load_dotenv
@@ -38,10 +39,19 @@ def create_api() -> googleapiclient.discovery.Resource:
         return youtube
 
 class YouTubeAPI:
+    """
+    This connects to the YouTube API, also includes methods to download video data
+
+    :params:
+        user_input (str)
+    :methods:
+        get_channel_data(): returns channel data
+        get_video_data(): gets videos data 
+    """
     def __init__(self, user_input: str):
-        self.user_input = user_input
-        self.channel_ID = '' 
         self.youtube = create_api()
+        self.user_input = user_input
+        self.channel_ID = channel_parser(self.youtube, self.user_input)
 
     def get_channel_data(self) -> Dict[str, str]:
             """
@@ -60,7 +70,6 @@ class YouTubeAPI:
                 channel_description (str): the description provided by the channel
             
             """
-            self.channel_ID = channel_parser(self.youtube, self.user_input)
             channel_request = self.youtube.channels().list(
                 part='snippet,contentDetails,statistics',
                 id=self.channel_ID
@@ -85,8 +94,6 @@ class YouTubeAPI:
         """
         Returns video information for a YouTube channel
 
-        :params:
-            channel_data (Dict[str, str]): this is outputted from the function get_channel_data
         :return:
             df (pandas.core.frame.DataFrame): all videos in channel and data
         """
@@ -94,43 +101,36 @@ class YouTubeAPI:
         channel_video_count = channel_data['channel_video_count']
         upload_playlist_ID = channel_data['upload_playlist_ID']
         
-        def playlist_requester(pageToken=None,upload_playlist_ID=upload_playlist_ID):
-            API_LIMIT = 50 # YouTube API limit
+        video_response = []
+        next_page_token = None
+        while True:
+            # obtaining video ID + titles
             playlist_request = self.youtube.playlistItems().list(
                     part='snippet,contentDetails',
-                    maxResults=API_LIMIT,
-                    pageToken=pageToken,
+                    maxResults=50, # API Limit is 50
+                    pageToken=next_page_token,
                     playlistId=upload_playlist_ID,
                     )
-            playlist_res = playlist_request.execute()
-            return playlist_res
-        
-        total_page_requests = math.ceil(int(channel_video_count)/50)
-        next_page_token = None
-
-        list_vid_ID= []
-        for i in range(total_page_requests):
-            playlist_res = playlist_requester(next_page_token)
-            vid_subset = [ vid_ID['contentDetails']['videoId'] for vid_ID in playlist_res['items'] ]            
-            list_vid_ID.extend(vid_subset)
-            logging.info('Number of Uploaded Videos: ' + str(len(list_vid_ID)))
-            if i < total_page_requests-1:
-                next_page_token = playlist_res['nextPageToken']
-
-        video_response = []
-        for i in range(total_page_requests):
-            video_res_subset = self.youtube.videos().list(
-            part='snippet,contentDetails,statistics',
-            id=list_vid_ID[50*i:50*(i+1)]
-            ).execute()
-            video_response.append(video_res_subset)
+            playlist_response = playlist_request.execute()
+            # isolating video ID
+            vid_subset = [ vid_ID['contentDetails']['videoId'] for vid_ID in playlist_response['items'] ]
+            # retrieving video statistics 
+            vid_info_subset_request = self.youtube.videos().list(
+                part='snippet,contentDetails,statistics',
+                id=vid_subset
+                )
+            vid_info_subset_response = vid_info_subset_request.execute()
+            video_response.append(vid_info_subset_response)
+            # obtaining page token
+            next_page_token = playlist_response.get('nextPageToken') # get method used because token may not exist
+            if next_page_token is None:
+                break
 
         df = pd.json_normalize(video_response, 'items')
-
         return df
 
-def main():
-    return
+    def main():
+        return
 
 if __name__ == '__main__':
     main()

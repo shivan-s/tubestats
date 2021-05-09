@@ -9,25 +9,24 @@ import streamlit as st
 
 from tubestats.youtube_data import YouTubeData
 
+# Settings
+ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
+DEBUG = True
+
 @st.cache
 def fetch_data(user_input):
         youtuber_data = YouTubeData(user_input)
         return youtuber_data
 
 def main():
-    # Settings
-    ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
-    DEBUG = False
-
-    # Presentation
     """
     # TubeStats
     *Analysis for YouTube Channel Consistency*
     """
     # User input
-    user_input = st.text_input('Please enter YouTube channel ID:', ALI_ABDAAL_CHANNEL_ID)
+    user_input = st.text_input('Please enter YouTube channel ID or URL to a YouTube video:', ALI_ABDAAL_CHANNEL_ID)
     if not user_input:
-        st.warning('Please input a YouTube channel ID (e.g. %s) or a link to a YouTube video.' % ALI_ABDAAL_CHANNEL_ID)
+        st.warning('Please input a YouTube channel ID (e.g. {example_ID}) or a link to a YouTube video.'.format(example_ID=ALI_ABDAAL_CHANNEL_ID))
         st.stop()
     youtuber_data = fetch_data(user_input) 
     
@@ -148,4 +147,10 @@ def main():
     [Please get in touch if you have any feedback](mailto:shivan@shivansivakumaran.com).
     """
 if __name__ == '__main__':
-    main()
+    st.set_page_config(page_title="TubeStats")
+    if DEBUG == True:
+        main()
+    try:
+        main()
+    except Exception as e:
+        st.error('Error: {e}'.format(e=e))

@@ -121,7 +121,6 @@ class YouTubeData:
             'snippet.title',
             'id',
             'snippet.description',
-            'snippet.tags', 
            'contentDetails.duration',
             'statistics.viewCount',
             'statistics.likeCount',
