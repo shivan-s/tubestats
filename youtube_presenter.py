@@ -9,17 +9,16 @@ import streamlit as st
 
 from tubestats.youtube_data import YouTubeData
 
+# Settings
+ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
+DEBUG = True
+
 @st.cache
 def fetch_data(user_input):
         youtuber_data = YouTubeData(user_input)
         return youtuber_data
 
 def main():
-    # Settings
-    ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
-    DEBUG = False
-
-    # Presentation
     """
     # TubeStats
     *Analysis for YouTube Channel Consistency*
@@ -149,6 +148,8 @@ def main():
     """
 if __name__ == '__main__':
     st.set_page_config(page_title="TubeStats")
+    if DEBUG == True:
+        main()
     try:
         main()
     except Exception as e:

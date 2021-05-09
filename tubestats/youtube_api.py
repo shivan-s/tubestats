@@ -50,6 +50,7 @@ class YouTubeAPI:
     """
     def __init__(self, user_input: str):
         self.youtube = create_api()
+        self.user_input = user_input
         self.channel_ID = channel_parser(self.youtube, self.user_input)
 
     def get_channel_data(self) -> Dict[str, str]:
@@ -99,62 +100,37 @@ class YouTubeAPI:
         channel_data = self.get_channel_data()
         channel_video_count = channel_data['channel_video_count']
         upload_playlist_ID = channel_data['upload_playlist_ID']
-
-        # I have total videos, I can call 50 at a time
-        # Get 50 videos IDs, then get the video data and build a list
-        # incorporate so kind of threading
-        # request video id,
-        # try except for next page token
-        # use video_id to obtain video data
-        # put data into df
-        def playlist_requester_(pageToken=None,upload_playlist_ID):
-            API_LIMIT = 50
-            playlist_request = self.youtube.playlistItems().list(
-                   part='snippet','contentDetails',
-                   maxResults=API_LIMIT,
-                   pageToken=pageToken,
-                   playlistId=upload_playlist_ID,
-                   )
-            playlist_response = playlist_request.execute()
-            return playlist_response
-
-        def playlist_requester(pageToken=None,upload_playlist_ID=upload_playlist_ID):
-            API_LIMIT = 50 # YouTube API limit
+        
+        video_response = []
+        next_page_token = None
+        while True:
+            # obtaining video ID + titles
             playlist_request = self.youtube.playlistItems().list(
                     part='snippet,contentDetails',
-                    maxResults=API_LIMIT,
-                    pageToken=pageToken,
+                    maxResults=50, # API Limit is 50
+                    pageToken=next_page_token,
                     playlistId=upload_playlist_ID,
                     )
-            playlist_res = playlist_request.execute()
-            return playlist_res
-        
-        total_page_requests = math.ceil(int(channel_video_count)/50)
-        next_page_token = None
-
-        list_vid_ID = []
-        for i in range(total_page_requests+1):
-            playlist_res = playlist_requester(next_page_token)
-            vid_subset = [ vid_ID['contentDetails']['videoId'] for vid_ID in playlist_res['items'] ]            
-            list_vid_ID.extend(vid_subset)
-            logging.info('Number of Uploaded Videos: ' + str(len(list_vid_ID)))
-            if i < total_page_requests-1:
-                next_page_token = playlist_res['nextPageToken']
-
-        video_response = []
-        for i in range(total_page_requests):
-            video_res_subset = self.youtube.videos().list(
-            part='snippet,contentDetails,statistics',
-            id=list_vid_ID[50*i:50*(i+1)]
-            ).execute()
-            video_response.append(video_res_subset)
+            playlist_response = playlist_request.execute()
+            # isolating video ID
+            vid_subset = [ vid_ID['contentDetails']['videoId'] for vid_ID in playlist_response['items'] ]
+            # retrieving video statistics 
+            vid_info_subset_request = self.youtube.videos().list(
+                part='snippet,contentDetails,statistics',
+                id=vid_subset
+                )
+            vid_info_subset_response = vid_info_subset_request.execute()
+            video_response.append(vid_info_subset_response)
+            # obtaining page token
+            next_page_token = playlist_response.get('nextPageToken') # get method used because token may not exist
+            if next_page_token is None:
+                break
 
         df = pd.json_normalize(video_response, 'items')
-
         return df
 
-def main():
-    return
+    def main():
+        return
 
 if __name__ == '__main__':
     main()
