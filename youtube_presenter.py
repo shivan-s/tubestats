@@ -24,9 +24,9 @@ def main():
     *Analysis for YouTube Channel Consistency*
     """
     # User input
-    user_input = st.text_input('Please enter YouTube channel ID:', ALI_ABDAAL_CHANNEL_ID)
+    user_input = st.text_input('Please enter YouTube channel ID or URL to a YouTube video:', ALI_ABDAAL_CHANNEL_ID)
     if not user_input:
-        st.warning('Please input a YouTube channel ID (e.g.{example_ID}) or a link to a YouTube video.'.format(example_ID=ALI_ABDAAL_CHANNEL_ID))
+        st.warning('Please input a YouTube channel ID (e.g. {example_ID}) or a link to a YouTube video.'.format(example_ID=ALI_ABDAAL_CHANNEL_ID))
         st.stop()
     youtuber_data = fetch_data(user_input) 
     
