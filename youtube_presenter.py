@@ -11,7 +11,7 @@ from tubestats.youtube_data import YouTubeData
 
 # Settings
 ALI_ABDAAL_CHANNEL_ID = 'UCoOae5nYA7VqaXzerajD0lg'
-DEBUG = True
+DEBUG = False
 
 @st.cache
 def fetch_data(user_input):
