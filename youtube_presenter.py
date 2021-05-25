@@ -54,7 +54,7 @@ def main():
     Below is a graph plotting the views of each video over time. Please note:
     - colour represents the like and dislike
     - size represents the number of views.
-    - natural log is used for the y-axis to 'squishes' the data 
+    - a natural log axis is applied to the view count due to its 'viral' nature
     """
     first_video_date = df['snippet.publishedAt_REFORMATED'].min().to_pydatetime()
     last_video_date = df['snippet.publishedAt_REFORMATED'].max().to_pydatetime()
