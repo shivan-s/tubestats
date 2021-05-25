@@ -143,9 +143,6 @@ class YouTubeData:
         df['statistics.sum-like-dislike'] = df['statistics.likeCount'] + df['statistics.dislikeCount']
         df['statistics.like-dislike-ratio'] = df['statistics.likeCount'].div((df['statistics.dislikeCount']+df['statistics.likeCount']), axis=0)
 
-        # applying natural log to view count as data is tail heavy
-        df['statistics.viewCount_NLOG'] = df['statistics.viewCount'].apply(lambda x : np.log(x))
-
         # reformatting time data
         # Turning ISO8061 into duation that python can utilise
         df['snippet.publishedAt_REFORMATED'] = df['snippet.publishedAt'].apply(lambda x : datetime.strptime(x, '%Y-%m-%dT%H:%M:%SZ'))
@@ -215,7 +212,7 @@ class YouTubeData:
         df_views = df
         c = alt.Chart(df_views, title='Plot of videos over time').mark_point().encode(
                 x=alt.X('snippet\.publishedAt_REFORMATED:T', axis=alt.Axis(title='Date Published')),
-                y=alt.Y('statistics\.viewCount_NLOG:Q', axis=alt.Axis(title='Natural Log of Views')),
+                y=alt.Y('statistics\.viewCount:Q', axis=alt.Axis(title='View Count'), scale=alt.Scale(type='log')),
                 color=alt.Color('statistics\.like-dislike-ratio:Q', scale=alt.Scale(scheme='turbo'), legend=None),
                 tooltip=['snippet\.title:N', 'statistics\.viewCount:Q', 'statistics\.like-dislike-ratio:Q'],
                 size=alt.Size('statistics\.viewCount:Q', legend=None)
