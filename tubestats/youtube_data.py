@@ -116,6 +116,8 @@ class YouTubeData:
         :return: df
         :rtype: pandas.core.frame.DataFrame
         """
+        # TODO: Check performance
+
         df = self.df
         df = df[['snippet.publishedAt',
             'snippet.title',
