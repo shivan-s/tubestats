@@ -23,10 +23,10 @@ def youtubedata():
     channel_ID = set_channel_ID_test_case() 
 
     # uses saved data instead of calling the API
-    with open(BASE_DIR / 'data' / 'channel_data.pkl', 'rb') as p:
+    with open(BASE_DIR / 'tests' / 'data' / 'channel_data.pkl', 'rb') as p:
         channel_data = pickle.load(p)
     
-    df = pandas.read_pickle(BASE_DIR / 'data' / 'video_data.pkl')
+    df = pandas.read_pickle(BASE_DIR / 'tests' / 'data' / 'video_data.pkl')
     
     yd = YouTubeData(channel_ID=channel_ID, channel_data=channel_data, df=df)
     return yd

@@ -1,6 +1,9 @@
-mkdir -p ~/.streamlit
-echo "[server]
-headless = true
-port = $PORT
-enableCORS = false
-" > ~/.streamlit/config.toml 
+#!/bin/sh
+
+#mkdir -p ./.streamlit
+#echo "[server]\n
+#headless = true\n
+#port = $PORT\n
+#enableCORS = false
+#" > ./.streamlit/config.toml
+streamlit run ./youtube_presenter.py

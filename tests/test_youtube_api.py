@@ -32,7 +32,7 @@ def test_get_channel_data(youtubeapi):
      
     # saving channel data for API calls later on
     BASE_DIR = Path(__file__).parent.parent
-    with open(BASE_DIR / 'data' / 'channel_data.pkl', 'wb') as p:
+    with open(BASE_DIR / 'tests' / 'data' / 'channel_data.pkl', 'wb') as p:
         pickle.dump(channel_data, p)
 
 def test_get_video_data(youtubeapi):
@@ -41,4 +41,4 @@ def test_get_video_data(youtubeapi):
 
     # saving video data to save API calls for later testing
     BASE_DIR = Path(__file__).parent.parent
-    df.to_pickle(BASE_DIR / 'data' / 'video_data.pkl')
+    df.to_pickle(BASE_DIR / 'tests' / 'data' / 'video_data.pkl')
