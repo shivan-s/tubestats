@@ -2,5 +2,5 @@
 serverAddress = "0.0.0.0"
 port = 8999
 headless = true
-enableCORS = false
-enableXsrfProtection = false
+# enableCORS = false
+# enableXsrfProtection = false
