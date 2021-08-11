@@ -25,16 +25,6 @@ All you need is the channel ID or you can enter the YouTube video URL of the int
 - `streamlit` to build the web interface 
 - Heroku for hosting
 
-## TODOs:
-- [X] Minimal viable product LIVE
-- [X] Refactor code
-	- [X] split python files up
-	- [X] type hinting
-	- [X] Create test cases
-- [X] Link to custom url: *https://www.tubestats.app*
-- [ ] async
-- [ ] Write a blog post about this topic
-
 ## Breaking down the script
 
 - main script:
