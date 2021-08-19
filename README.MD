@@ -10,7 +10,7 @@ This is a simple dashboard app, which analyses how consistent a YouTube channel 
 
 The inspiration for this project came from Ali Abdaal. Ali Abdaal preaches about consistency. So, the question is how consistent is Ali Abdaal at posting YouTube video. Also, we will look at some other interesting channel statistics.
 
-[The app is live here](https://www.tubestats.app)
+[The app is live here](https://tubestats.shivan.xyz)
 
 ## How to use
 
