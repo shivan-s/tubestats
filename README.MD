@@ -14,31 +14,14 @@ The inspiration for this project came from Ali Abdaal. Ali Abdaal preaches about
 
 ## How to use
 
-All you need is the channel ID or you can enter the YouTube video URL of the interested channel:
+All you need is the channel ID or you can enter the YouTube video URL of the interested channel. A animated gif will demonstrate this below.
 ![](tubestats_parsing.gif) 
 
-## Technologies used
-- python 3.8
-- `googleapiclient` to access YouTube data
-- `pandas` and `NumPy` for data wrangling 
-- `altair` for graphing
-- `streamlit` to build the web interface 
-- Heroku for hosting
+## How to get his to work for you
 
-## Breaking down the script
+If you would like to run this locally, you can simply clone the repository.
 
-- main script:
-	- youtube_presenter.py - main script that presents information
-- support scripts:
-	- tubestats/youtube_api.py - helper script that connnects to API and downloads video data
-	- tubestats/youtube_data.py - helper script that wrangles data and produces statstics and graphs
-	- tubestats/youtube_parser.py - helper script that takes user inputs and produces a channel ID
-	- tests/ - contain all test scripts and cases
-- supporting files:
-- Procfile - used by Heroku to set up environments
-- setup.sh - used by Heroku to set up environments
-- requirements.txt - contains dependancies for this project
-- data/ - contains test data
+You will then need to get up an API token with the YouTube Data API. [Here is a good resource on how to do this plus more](https://shivansivakumaran.com/coding/my-tubestats-app/).
 
 ## Feedback
 
