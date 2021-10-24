@@ -1,3 +1,5 @@
+# .pre-commit-config.yaml
+repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
     hooks:
@@ -5,3 +7,27 @@
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: check-added-large-files
+        args: ['--maxkb=2000']
+    -   id: detect-private-key
+
+-   repo: https://github.com/ambv/black
+    rev: 21.7b0
+    hooks:
+    -   id: black
+        args: [--line-length=79]
+        language_version: python3.8
+
+-   repo: https://github.com/pycqa/flake8
+    rev: 3.7.9
+    hooks:
+    -   id: flake8
+        exclude: "^tests*,*/migrations/*"
+        args:
+                - "--max-line-length=120"
+                - "--ignore=E712,W503,W605,F401,F403,F405"
+                  # E712 - if, W503 - binary, F401,F403,F405 - star imports
+
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.910
+    hooks:
+    -   id: mypy

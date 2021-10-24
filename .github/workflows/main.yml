@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+    pull_request:
+      branches: [ main ]
+
+jobs:
+  build:
+    name: Build app and run tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Python, Pipenv and Pipfile packages
+        uses: palewire/install-python-pipenv-pipfile@v2
+        with:
+          python-version: 3.8
+
+      - name: Lint code
+        uses: py-actions/flake8@v1
+        with:
+          ignore: "E712,W503,W605,F401,F403,F405"
+          exclude: "^tests*,*/migrations/*"
+          max-line-length: "120"
+
+      - name: Setting environment and running tests
+        env:
+          TEST_VAR: no
+        run: >
+          pipenv run pytest -vv
+
+      - name: Build successful
+        run: |
+          echo Build is successful

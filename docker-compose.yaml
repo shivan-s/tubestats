@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "8999:8999"
+    restart: always
