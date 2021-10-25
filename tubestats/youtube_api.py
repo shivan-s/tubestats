@@ -9,7 +9,6 @@
 import os
 import math
 import logging
-import threading
 from typing import Dict
 
 import pandas as pd

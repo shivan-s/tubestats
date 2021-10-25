@@ -6,3 +6,5 @@ headless = true
 [browser]
 serverAddress = "0.0.0.0"
 serverPort = 8999
+[global]
+dataFrameSerialization = "legacy"

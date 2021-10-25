@@ -13,4 +13,4 @@ COPY . /code/
 
 RUN chmod +x ./entrypoint.sh
 
-ENTRYPOINT [ "sh", "-c", "./entrypoint.sh" ]
+ENTRYPOINT [ "sh", "./entrypoint.sh" ]

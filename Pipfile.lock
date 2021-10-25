@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1f327fa6bd45b82229afb5c6e02e78d6cf16979e5f6425d6725f3250e47efade"
+            "sha256": "145051936a2fab47b56e61b577e71c28aa7ff45c10c7fd9a85e8ad02cbb27685"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -247,11 +247,11 @@
         },
         "gitdb": {
             "hashes": [
-                "sha256:6875cbaed01f1b750394f372607803768fc7dad7c58c7ceb5f5917e980d779b2",
-                "sha256:858966a9310649cb24a387c101429bb5a1110068a312517722b0281077e78bc6"
+                "sha256:8033ad4e853066ba6ca92050b9df2f89301b8fc8bf7e9324d412a63f8bf1a8fd",
+                "sha256:bac2fd45c0a1c9cf619e63a90d62bdc63892ef92387424b855792a6cabe789aa"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==4.0.8"
+            "version": "==4.0.9"
         },
         "gitpython": {
             "hashes": [
@@ -610,7 +610,7 @@
                 "sha256:f567e972dce3bbc3a8076e0b675273b4a9e8576ac629149cf8286ee13c259ae5",
                 "sha256:fe48e4925455c964db914b958f6e7032d285848b7538a5e1b19aeb26ffaea3ec"
             ],
-            "markers": "python_full_version >= '3.7.1'",
+            "index": "pypi",
             "version": "==1.3.4"
         },
         "pandocfilters": {
