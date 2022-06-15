@@ -1,13 +1,5 @@
-#!usr/bin/env python3
-# test/test_youtube_data.py - testing data wrangling
-#                           - testing graph output
-# by Shivan Sivakumaran
+"""Testing for application."""
 
-from tubestats.youtube_data import YouTubeData
-from tests.test_settings import set_channel_ID_test_case
-
-import pickle
-from pathlib import Path
 from datetime import datetime, timedelta
 from typing import List
 
@@ -15,22 +7,6 @@ import pytest
 import pandas
 import numpy
 import altair
-
-
-@pytest.fixture()
-def youtubedata():
-    BASE_DIR = Path(__file__).parent.parent
-    channel_ID = set_channel_ID_test_case()
-
-    # uses saved data instead of calling the API
-    with open(BASE_DIR / "tests" / "data" / "channel_data.pkl", "rb") as p:
-        channel_data = pickle.load(p)
-
-    df = pandas.read_pickle(BASE_DIR / "tests" / "data" / "video_data.pkl")
-
-    yd = YouTubeData(channel_ID=channel_ID, channel_data=channel_data, df=df)
-    return yd
-
 
 def test_channel_name(youtubedata):
     name = youtubedata.channel_name()
@@ -84,11 +60,6 @@ def test_total_comments(youtubedata):
 
 
 @pytest.fixture()
-def with_dates(youtubedata):
-    date_start = datetime(2017, 6, 30)
-    date_end = datetime(2017, 12, 30)
-    df = youtubedata.transform_dataframe(date_start, date_end)
-    return df
 
 
 def test_tranform_dataframe(with_dates):
@@ -107,12 +78,6 @@ def test_most_viewed_videos(with_dates, youtubedata):
     df = with_dates
     most_viewed = youtubedata.most_viewed_videos(df)
     assert isinstance(most_viewed, dict)
-
-
-def test_most_disliked_videos(with_dates, youtubedata):
-    df = with_dates
-    most_disliked = youtubedata.most_disliked_videos(df)
-    assert isinstance(most_disliked, dict)
 
 
 @pytest.fixture()

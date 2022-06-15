@@ -1,8 +1,4 @@
-#!/usr/bin/env python3
-# tubestats/youtube_presenter.py - main script for displaying data and graphs
-#
-# by Shivan Sivakumaran
-
+"""TubeStats."""
 from datetime import datetime, timedelta
 
 import streamlit as st
@@ -13,7 +9,7 @@ from tubestats.youtube_data import YouTubeData
 ALI_ABDAAL_CHANNEL_ID = "UCoOae5nYA7VqaXzerajD0lg"
 SHIVAN_SIVAKUMARAN_CHANNEL_ID = "UCrbYXWUmeCy4GqArthu4hCw"
 DEBUG = False
-DEFAULT_CHANNEL_ID = ALI_ABDAAL_CHANNEL_ID
+DEFAULT_CHANNEL_ID = SHIVAN_SIVAKUMARAN_CHANNEL_ID
 
 
 @st.cache
@@ -30,7 +26,7 @@ def main():
     # User input
     user_input = st.text_input(
         "Please enter YouTube channel ID or URL to a YouTube video:",
-        ALI_ABDAAL_CHANNEL_ID,
+        DEFAULT_CHANNEL_ID,
     )
     if not user_input:
         st.warning(
@@ -41,7 +37,7 @@ def main():
         st.stop()
     youtuber_data = fetch_data(user_input)
 
-    if DEBUG == True:
+    if DEBUG is True:
         raw_df = youtuber_data.raw_dataframe()
         st.write(raw_df)
 
@@ -77,7 +73,7 @@ def main():
     st.header("Videos")
     """
     Below is a graph plotting the views of each video over time. Please note:
-    - colour represents the like and dislike
+    - colour represents the like
     - size represents the number of views.
     - a natural log axis is applied to the view count due to its 'viral' nature
     """
@@ -167,18 +163,6 @@ def main():
     most_viewed_info = youtuber_data.most_viewed_videos(df=transformed_df)
     st.write(most_viewed_info["preserved_df"])
     display_vid_links(most_viewed_info)
-
-    # dislike_num = st.slider('Number of videos', 5, 20, key=0)
-    st.header("Most Unpopular Videos")
-    """
-    Remaining a hypothesis, people actively show their digust for \
-            a video by hitting dislike video. Hence, we are provided \
-            with a like-dislike ratio. We also have the sum to ensure  \
-            we have enough likes/dislikes for fair comparison.
-            """
-    most_disliked_info = youtuber_data.most_disliked_videos(df=transformed_df)
-    st.write(most_disliked_info["preserved_df"])
-    display_vid_links(most_disliked_info)
 
     st.header("List of Video")
     """

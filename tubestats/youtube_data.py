@@ -130,7 +130,6 @@ class YouTubeData:
                 "contentDetails.duration",
                 "statistics.viewCount",
                 "statistics.likeCount",
-                "statistics.dislikeCount",
                 "statistics.favoriteCount",
                 "statistics.commentCount",
             ]
@@ -144,18 +143,8 @@ class YouTubeData:
             {
                 "statistics.viewCount": "int",
                 "statistics.likeCount": "int",
-                "statistics.dislikeCount": "int",
                 "statistics.commentCount": "int",
             }
-        )
-
-        # creating like-dislike ratio and sum of likes and dislikes ratio
-        df["statistics.sum-like-dislike"] = (
-            df["statistics.likeCount"] + df["statistics.dislikeCount"]
-        )
-        df["statistics.like-dislike-ratio"] = df["statistics.likeCount"].div(
-            (df["statistics.dislikeCount"] + df["statistics.likeCount"]),
-            axis=0,
         )
 
         # reformatting time data
@@ -163,13 +152,11 @@ class YouTubeData:
         df["snippet.publishedAt_REFORMATED"] = df["snippet.publishedAt"].apply(
             lambda x: datetime.strptime(x, "%Y-%m-%dT%H:%M:%SZ")
         )
-        df["contentDetails.duration_REFORMATED"] = df[
-            "contentDetails.duration"
-        ].apply(lambda x: isodate.parse_duration(x))
-        # sorting data by time
-        df = df.sort_values(
-            by="snippet.publishedAt_REFORMATED", ascending=True
+        df["contentDetails.duration_REFORMATED"] = df["contentDetails.duration"].apply(
+            lambda x: isodate.parse_duration(x)
         )
+        # sorting data by time
+        df = df.sort_values(by="snippet.publishedAt_REFORMATED", ascending=True)
         return df
 
     def total_channel_views(self) -> int:
@@ -227,9 +214,7 @@ class YouTubeData:
         ]
         return df
 
-    def scatter_all_videos(
-        self, df: pd.core.frame.DataFrame
-    ) -> alt.vegalite.v4.Chart:
+    def scatter_all_videos(self, df: pd.core.frame.DataFrame) -> alt.vegalite.v4.Chart:
         """
         Produces graph plotting natural log of views over
 
@@ -252,23 +237,21 @@ class YouTubeData:
                     scale=alt.Scale(type="log"),
                 ),
                 color=alt.Color(
-                    "statistics\.like-dislike-ratio:Q",
+                    "statistics\.likeCount:Q",
                     scale=alt.Scale(scheme="turbo"),
                     legend=None,
                 ),
                 tooltip=[
                     "snippet\.title:N",
                     "statistics\.viewCount:Q",
-                    "statistics\.like-dislike-ratio:Q",
+                    "statistics\.likeCount:Q",
                 ],
                 size=alt.Size("statistics\.viewCount:Q", legend=None),
             )
         )
         return c
 
-    def most_viewed_videos(
-        self, df: pd.core.frame.DataFrame, num: int = 10
-    ) -> dict:
+    def most_viewed_videos(self, df: pd.core.frame.DataFrame, num: int = 10) -> dict:
         """
         Returns dictionary for dataframe, title of video, and video link in a dictionary, ranking most viewed videos
 
@@ -288,7 +271,6 @@ class YouTubeData:
             [
                 "snippet.title",
                 "statistics.viewCount",
-                "statistics.like-dislike-ratio",
             ]
         ].head(int(num))
         most_viewed_info = dict(
@@ -297,42 +279,6 @@ class YouTubeData:
             link=link,
         )
         return most_viewed_info
-
-    def most_disliked_videos(
-        self, df: pd.core.frame.DataFrame, num: int = 5
-    ) -> dict:
-        """
-        Returns dictionary for dataframe, title of video, and video link in a dictionary ranking most disliked videos
-
-        :params: self
-            df (dataframe)
-            num (int): default is 5
-        :return: key for dictionary:
-            'preserved_df' (dataframe)
-            'title' (str): video titles
-            'link' (str): url links to video
-        """
-        # sort df and then keep relevant tags
-        sorted_df = df.sort_values(
-            by="statistics.like-dislike-ratio", ascending=True
-        )
-        title = list(sorted_df["snippet.title"].values[0:num])
-        link = list(sorted_df["id"].values[0:num])
-        preserved_df = sorted_df[
-            [
-                "snippet.title",
-                "statistics.like-dislike-ratio",
-                "statistics.viewCount",
-                "statistics.sum-like-dislike",
-            ]
-        ].head(int(num))
-
-        most_disliked_info = dict(
-            preserved_df=preserved_df,
-            title=title,
-            link=link,
-        )
-        return most_disliked_info
 
     def time_difference_calculate(
         self, df: pd.core.frame.DataFrame
@@ -376,18 +322,14 @@ class YouTubeData:
         :return: time_differences
         :rtype: pandas.core.frame.DataFrame
         """
-        time_differences = df.sort_values(
-            by="snippet.time_diff", ascending=False
-        )[
+        time_differences = df.sort_values(by="snippet.time_diff", ascending=False)[
             [
                 "snippet.time_diff",
                 "snippet.publishedAt_REFORMATED",
                 "snippet.title",
                 "id",
             ]
-        ].head(
-            int(num)
-        )
+        ].head(int(num))
         return time_differences
 
     def time_difference_plot(
@@ -412,20 +354,14 @@ class YouTubeData:
                 y=alt.Y(
                     "jitter:Q",
                     title=None,
-                    axis=alt.Axis(
-                        values=[0], ticks=True, grid=False, labels=False
-                    ),
+                    axis=alt.Axis(values=[0], ticks=True, grid=False, labels=False),
                     scale=alt.Scale(),
                 ),
-                x=alt.X(
-                    "snippet\.time_diff:Q", title="Day from previous video"
-                ),
+                x=alt.X("snippet\.time_diff:Q", title="Day from previous video"),
                 color=alt.Color("statistics\.viewCount:Q", legend=None),
                 tooltip=["snippet\.title:N", "statistics\.viewCount:Q"],
             )
-            .transform_calculate(
-                jitter="sqrt(-2*log(random()))*cos(2*PI*random())"
-            )
+            .transform_calculate(jitter="sqrt(-2*log(random()))*cos(2*PI*random())")
             .configure_facet(spacing=0)
             .configure_view(stroke=None)
         )
