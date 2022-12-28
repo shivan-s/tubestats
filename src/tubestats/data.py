@@ -4,23 +4,20 @@
 #                           - produces graphs based on channel and video channel_statistics
 # by Shivan Sivakumaran
 
-import math
-import logging
 import re
-from datetime import date, datetime, timedelta
-from typing import List, Dict
+from datetime import datetime, timedelta
+from typing import Dict
 
 import isodate
 import pandas as pd
-import numpy as np
 import altair as alt
 
-from tubestats.youtube_api import YouTubeAPI
+from api import YouTubeAPI
 
 
 class YouTubeData:
     """
-    Class containing methods to apply statistics to YouTube channel
+    Class containing methods to apply statistics to YouTube channel.
 
     :params:
         channel_ID (str): channel_ID
@@ -29,6 +26,7 @@ class YouTubeData:
     """
 
     def __init__(self, channel_ID: str, channel_data=None, df=None):
+        """Construct class."""
         self.channel_ID = channel_ID
         self.channel_data = channel_data
         self.df = df
@@ -152,11 +150,13 @@ class YouTubeData:
         df["snippet.publishedAt_REFORMATED"] = df["snippet.publishedAt"].apply(
             lambda x: datetime.strptime(x, "%Y-%m-%dT%H:%M:%SZ")
         )
-        df["contentDetails.duration_REFORMATED"] = df["contentDetails.duration"].apply(
-            lambda x: isodate.parse_duration(x)
-        )
+        df["contentDetails.duration_REFORMATED"] = df[
+            "contentDetails.duration"
+        ].apply(lambda x: isodate.parse_duration(x))
         # sorting data by time
-        df = df.sort_values(by="snippet.publishedAt_REFORMATED", ascending=True)
+        df = df.sort_values(
+            by="snippet.publishedAt_REFORMATED", ascending=True
+        )
         return df
 
     def total_channel_views(self) -> int:
@@ -214,7 +214,9 @@ class YouTubeData:
         ]
         return df
 
-    def scatter_all_videos(self, df: pd.core.frame.DataFrame) -> alt.vegalite.v4.Chart:
+    def scatter_all_videos(
+        self, df: pd.core.frame.DataFrame
+    ) -> alt.vegalite.v4.Chart:
         """
         Produces graph plotting natural log of views over
 
@@ -251,7 +253,9 @@ class YouTubeData:
         )
         return c
 
-    def most_viewed_videos(self, df: pd.core.frame.DataFrame, num: int = 10) -> dict:
+    def most_viewed_videos(
+        self, df: pd.core.frame.DataFrame, num: int = 10
+    ) -> dict:
         """
         Returns dictionary for dataframe, title of video, and video link in a dictionary, ranking most viewed videos
 
@@ -322,14 +326,18 @@ class YouTubeData:
         :return: time_differences
         :rtype: pandas.core.frame.DataFrame
         """
-        time_differences = df.sort_values(by="snippet.time_diff", ascending=False)[
+        time_differences = df.sort_values(
+            by="snippet.time_diff", ascending=False
+        )[
             [
                 "snippet.time_diff",
                 "snippet.publishedAt_REFORMATED",
                 "snippet.title",
                 "id",
             ]
-        ].head(int(num))
+        ].head(
+            int(num)
+        )
         return time_differences
 
     def time_difference_plot(
@@ -354,14 +362,20 @@ class YouTubeData:
                 y=alt.Y(
                     "jitter:Q",
                     title=None,
-                    axis=alt.Axis(values=[0], ticks=True, grid=False, labels=False),
+                    axis=alt.Axis(
+                        values=[0], ticks=True, grid=False, labels=False
+                    ),
                     scale=alt.Scale(),
                 ),
-                x=alt.X("snippet\.time_diff:Q", title="Day from previous video"),
+                x=alt.X(
+                    "snippet\.time_diff:Q", title="Day from previous video"
+                ),
                 color=alt.Color("statistics\.viewCount:Q", legend=None),
                 tooltip=["snippet\.title:N", "statistics\.viewCount:Q"],
             )
-            .transform_calculate(jitter="sqrt(-2*log(random()))*cos(2*PI*random())")
+            .transform_calculate(
+                jitter="sqrt(-2*log(random()))*cos(2*PI*random())"
+            )
             .configure_facet(spacing=0)
             .configure_view(stroke=None)
         )
@@ -369,7 +383,7 @@ class YouTubeData:
 
     def time_difference_statistics(
         self, df: pd.core.frame.DataFrame
-    ) -> Dict[float, float]:
+    ) -> dict[float, float]:
         """
         Gives quantiles for time differences
 

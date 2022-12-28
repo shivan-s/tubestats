@@ -1,10 +1,10 @@
 [server]
-port = 8999
+port = 8000
 headless = true
 # enableCORS = false
 # enableXsrfProtection = false
 [browser]
 serverAddress = "0.0.0.0"
-serverPort = 8999
+serverPort = 8010
 [global]
 dataFrameSerialization = "legacy"

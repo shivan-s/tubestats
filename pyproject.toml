@@ -1,0 +1,87 @@
+[build-system]
+requires = ["setuptools >= 62.1.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tubestats"
+version = "0.0.1"
+authors = [
+  { name = "Shivan Sivakumaran" },
+  { email = "<shivan.sivakumaran@gmail.com>" },
+]
+requires-python = ">=3.8"
+description = "Analysing YouTube Channel Statistics"
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { text = "MIT" }
+keywords = ["YouTube"]
+dependencies = [
+  "streamlit",
+  "google-api-python-client",
+  "isodate",
+  "altair",
+  "numpy",
+  "pandas",
+  "sentry-sdk",
+  "watchdog",
+]
+
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: Implementation :: CPython",
+]
+
+[project.urls]
+homepage = "https://tubestats.shivan.xyz"
+repository = "https://github.com/shivan-s/tubestats"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["tubestats*"]
+exclude = ["tests"]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 79
+default_section = "THIRDPARTY"
+known_first_party = ["tubestats"]
+known_third_party = [
+  "altair",
+  "googleapiclient",
+  "numpy",
+  "pandas",
+  "pytest",
+  "streamlit",
+  "isodate",
+]
+
+[tool.black]
+line-length = 79
+include = '\.pyi?%'
+
+[tool.pytest.ini_options]
+addopts = "-vv --cov-report html"
+testpaths = ["tests"]
+mock_use_standalone_module = true
+
+[tool.pydocstyle]
+match = ".*/.py"
+
+[tool.mypy]
+mypy_path = "src"
+ignore_missing_imports = true
+exclude = "docs"
+
+[tool.pyright]
+include = ["src"]
+exclude = [".venv"]
+venvPath = "."
+venv = ".venv"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.0.1"
+tag_format = "$version"

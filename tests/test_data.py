@@ -3,10 +3,11 @@
 from datetime import datetime, timedelta
 from typing import List
 
-import pytest
-import pandas
-import numpy
 import altair
+import numpy
+import pandas
+import pytest
+
 
 def test_channel_name(youtubedata):
     name = youtubedata.channel_name()
@@ -60,8 +61,6 @@ def test_total_comments(youtubedata):
 
 
 @pytest.fixture()
-
-
 def test_tranform_dataframe(with_dates):
     df = with_dates
     assert isinstance(df, pandas.core.frame.DataFrame)

@@ -1,5 +1,10 @@
+.PHONY: run
 run:
-	pipenv run streamlit run youtube_presenter.py
+	@echo "Building and running application" && \
+	docker-compose down --remove-orphans && \
+	docker-compose up --build
 
+.PHONY: test
 test:
-	pipenv run pytest
+	@echo "Running pytest" && \
+	pipenv run pytest -v

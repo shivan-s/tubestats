@@ -7,7 +7,6 @@
 # by Shivan Sivakumaran
 
 import os
-import math
 import logging
 from typing import Dict
 
@@ -15,7 +14,7 @@ import pandas as pd
 import googleapiclient.discovery
 import googleapiclient.errors
 
-from tubestats.youtube_parser import channel_parser
+from parser import channel_parser
 
 
 def create_api() -> googleapiclient.discovery.Resource:
@@ -79,9 +78,9 @@ class YouTubeAPI:
         channel_snippet = channel_details["snippet"]
 
         channel_data = dict(
-            upload_playlist_ID=channel_details["contentDetails"][
-                "relatedPlaylists"
-            ]["uploads"],
+            upload_playlist_ID=channel_details["contentDetails"]["relatedPlaylists"][
+                "uploads"
+            ],
             channel_name=channel_snippet["title"],
             channel_subscriber_count=channel_statistics["subscriberCount"],
             channel_video_count=channel_statistics["videoCount"],

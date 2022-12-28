@@ -1,10 +1,22 @@
-version: "3.7"
+---
+version: "3.9"
+
+name: tubestats
 
 services:
   app:
-    build: .
+    container_name: tubestats
+    image: tubestats:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     env_file:
       - .env
     ports:
-      - "8999:8999"
-    restart: always
+      - ${APP_PORT}:8000
+    restart: unless-stopped
+    volumes:
+      - ./src/:/code/src/
+      - ./test/:/code/test/
+    expose:
+      - 8000

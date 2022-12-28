@@ -1,9 +1,17 @@
 """TubeStats."""
+import os
+
 from datetime import datetime, timedelta
 
+import sentry_sdk
 import streamlit as st
 
-from tubestats.youtube_data import YouTubeData
+from tubestats.data import YouTubeData
+
+sentry_sdk.init(
+    dsn=f"https://{os.getenv('SENTRY_DSN', '')}.ingest.sentry.io/6629324",
+    traces_sample_rate=0.5,
+)
 
 # Settings
 ALI_ABDAAL_CHANNEL_ID = "UCoOae5nYA7VqaXzerajD0lg"
@@ -19,9 +27,12 @@ def fetch_data(user_input):
 
 
 def main():
+    """Entry point."""
     """
     # TubeStats
     *Analysis for YouTube Channel Consistency*
+
+    [Source code](https://github.com/shivan-s/tubestats)
     """
     # User input
     user_input = st.text_input(
@@ -30,9 +41,7 @@ def main():
     )
     if not user_input:
         st.warning(
-            "Please input a YouTube channel ID (e.g. {example_ID}) or a link to a YouTube video.".format(
-                example_ID=ALI_ABDAAL_CHANNEL_ID
-            )
+            f"Please input a YouTube channel ID (e.g. {DEFAULT_CHANNEL_ID}) or a link to a YouTube video."
         )
         st.stop()
     youtuber_data = fetch_data(user_input)
@@ -169,15 +178,6 @@ def main():
     List of videos and all relevant features.
     """
     st.write(df)
-
-    st.header("Feedback")
-    """
-    This was made by [Shivan Sivakumaran](https://shivansivakumaran.com).
-
-    [Here is the code](https://github.com/ShivanS93/tubestats).
-
-    [Please get in touch if you have any feedback](mailto:shivan@shivansivakumaran.com).
-    """
 
 
 if __name__ == "__main__":

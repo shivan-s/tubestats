@@ -15,7 +15,7 @@ The inspiration for this project came from Ali Abdaal. Ali Abdaal preaches about
 ## How to use
 
 All you need is the channel ID or you can enter the YouTube video URL of the interested channel. A animated gif will demonstrate this below.
-![](tubestats_parsing.gif) 
+![](tubestats_parsing.gif)
 
 ## How to get his to work for you
 
