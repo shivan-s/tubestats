@@ -11,7 +11,6 @@ altair = "*"
 numpy = "*"
 pandas = "*"
 sentry-sdk = "*"
-tubestats = { editable = true, path = "." }
 watchdog = "*"
 
 [dev-packages]

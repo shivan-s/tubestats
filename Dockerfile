@@ -10,7 +10,7 @@ WORKDIR /code
 # hadolint ignore=DL3013
 RUN pip install --no-cache-dir -U pipenv pip
 COPY Pipfile Pipfile.lock /code/
-RUN pipenv install --system --deploy --dev
+RUN pipenv install --system --deploy
 
 COPY src /code/src/
 COPY tests /code/tests/
