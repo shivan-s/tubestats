@@ -13,7 +13,7 @@ services:
     env_file:
       - .env
     ports:
-      - ${APP_PORT}:8000
+      - ${APP_PORT:-8003}:8000
     restart: unless-stopped
     volumes:
       - ./src/:/code/src/
