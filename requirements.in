@@ -1,0 +1,8 @@
+streamlit
+google-api-python-client
+isodate
+altair
+numpy
+pandas
+sentry-sdk
+watchdog
