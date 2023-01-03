@@ -12,6 +12,7 @@ numpy = "*"
 pandas = "*"
 sentry-sdk = "*"
 watchdog = "*"
+tubestats = {editable = true, path = "."}
 
 [dev-packages]
 pytest = "*"

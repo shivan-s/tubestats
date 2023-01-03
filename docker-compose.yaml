@@ -17,6 +17,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./src/:/code/src/
-      - ./test/:/code/test/
+      - ./tests/:/code/tests/
     expose:
       - 8000

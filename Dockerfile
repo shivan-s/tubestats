@@ -16,6 +16,6 @@ RUN pip-compile -o requirements.txt requirements.in && \
   pip install --no-cache-dir --no-deps -r requirements.txt
 # hadolint ignore=DL3013
 
-COPY ./src .
+COPY ./src ./src/
 
-CMD ["streamlit", "run", "/code/tubestats/main.py", "--server.port", "8000"]
+CMD ["streamlit", "run", "/code/src/tubestats/main.py", "--server.port", "8000"]

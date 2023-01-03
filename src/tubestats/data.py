@@ -8,10 +8,9 @@ import re
 from datetime import datetime, timedelta
 from typing import Dict
 
+import altair as alt
 import isodate
 import pandas as pd
-import altair as alt
-
 from api import YouTubeAPI
 
 

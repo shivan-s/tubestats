@@ -1,16 +1,14 @@
 """TubeStats."""
 import os
-
 from datetime import datetime, timedelta
 
 import sentry_sdk
 import streamlit as st
-
-from tubestats.data import YouTubeData
+from data import YouTubeData
 
 sentry_sdk.init(
     dsn=f"https://{os.getenv('SENTRY_DSN', '')}.ingest.sentry.io/6629324",
-    traces_sample_rate=0.5,
+    traces_sample_rate=0.1,
 )
 
 # Settings
